@@ -13,6 +13,16 @@ typedef struct {
         int targetRegister;
         } regInfo;
 
+typedef struct linkedListNode {
+	char identifierName[50];
+	struct linkedListNode *next;
+} linkedListNode;
+
+typedef struct typeSpecs {
+	int isArray;
+	int size;
+} typeSpecs;
+
 #endif
 
 

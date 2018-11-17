@@ -71,11 +71,14 @@ int yylex();
 void yyerror(char * s);
 #include "symtab.h"
 
+//i added this
+linkedListNode * insertAtEnd(linkedListNode * head, linkedListNode * lln);
+
 FILE *outfile;
 char *CommentBuffer;
  
 
-#line 79 "parse.tab.c" /* yacc.c:339  */
+#line 82 "parse.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -140,12 +143,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 14 "parse.y" /* yacc.c:355  */
+#line 17 "parse.y" /* yacc.c:355  */
 tokentype token;
         regInfo targetReg;
+	linkedListNode *identifierList;
+	typeSpecs typeSpec;
        
 
-#line 149 "parse.tab.c" /* yacc.c:355  */
+#line 154 "parse.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -162,7 +167,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 166 "parse.tab.c" /* yacc.c:358  */
+#line 171 "parse.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -459,13 +464,13 @@ static const yytype_uint8 yytranslate[] =
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_uint16 yyrline[] =
 {
-       0,    40,    40,    40,    45,    48,    49,    52,    53,    54,
-      57,    60,    61,    64,    66,    69,    70,    71,    74,    75,
-      76,    77,    78,    81,    84,    90,    93,    97,   106,   119,
-     122,   136,   146,   148,   151,   160,   164,   168,   171,   172,
-     176,   178,   180,   182,   184
+       0,    50,    50,    50,    55,    58,    59,    62,    63,    64,
+      67,    77,    93,   106,   108,   111,   112,   113,   116,   117,
+     118,   119,   120,   123,   126,   132,   135,   139,   148,   190,
+     193,   204,   214,   223,   226,   235,   239,   243,   246,   247,
+     251,   253,   255,   259,   276
 };
 #endif
 
@@ -1296,146 +1301,177 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 40 "parse.y" /* yacc.c:1646  */
+#line 50 "parse.y" /* yacc.c:1646  */
     {emitComment("Assign STATIC_AREA_ADDRESS to register \"r0\"");
            emit(NOLABEL, LOADI, STATIC_AREA_ADDRESS, 0, EMPTY);}
-#line 1303 "parse.tab.c" /* yacc.c:1646  */
+#line 1308 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 42 "parse.y" /* yacc.c:1646  */
+#line 52 "parse.y" /* yacc.c:1646  */
     { }
-#line 1309 "parse.tab.c" /* yacc.c:1646  */
+#line 1314 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 45 "parse.y" /* yacc.c:1646  */
+#line 55 "parse.y" /* yacc.c:1646  */
     { }
-#line 1315 "parse.tab.c" /* yacc.c:1646  */
+#line 1320 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 49 "parse.y" /* yacc.c:1646  */
+#line 59 "parse.y" /* yacc.c:1646  */
     { }
-#line 1321 "parse.tab.c" /* yacc.c:1646  */
+#line 1326 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 52 "parse.y" /* yacc.c:1646  */
+#line 62 "parse.y" /* yacc.c:1646  */
     { }
-#line 1327 "parse.tab.c" /* yacc.c:1646  */
+#line 1332 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 53 "parse.y" /* yacc.c:1646  */
+#line 63 "parse.y" /* yacc.c:1646  */
     { }
-#line 1333 "parse.tab.c" /* yacc.c:1646  */
+#line 1338 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 54 "parse.y" /* yacc.c:1646  */
+#line 64 "parse.y" /* yacc.c:1646  */
     { yyerror("***Error: illegal variable declaration\n");}
-#line 1339 "parse.tab.c" /* yacc.c:1646  */
+#line 1344 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 57 "parse.y" /* yacc.c:1646  */
-    {  }
-#line 1345 "parse.tab.c" /* yacc.c:1646  */
-    break;
+#line 67 "parse.y" /* yacc.c:1646  */
+    {  
+				linkedListNode * temp = (yyvsp[-2].identifierList);
 
-  case 11:
-#line 60 "parse.y" /* yacc.c:1646  */
-    { insert((yyvsp[0].token).str, NextOffset(1)); }
-#line 1351 "parse.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 12:
-#line 61 "parse.y" /* yacc.c:1646  */
-    { insert((yyvsp[0].token).str, NextOffset(1)); }
+				while (temp != NULL) {
+					insert(temp->identifierName, NextOffset((yyvsp[0].typeSpec).size), (yyvsp[0].typeSpec).isArray);
+					temp = temp->next;
+				}
+			  }
 #line 1357 "parse.tab.c" /* yacc.c:1646  */
     break;
 
-  case 13:
-#line 64 "parse.y" /* yacc.c:1646  */
-    {  }
-#line 1363 "parse.tab.c" /* yacc.c:1646  */
+  case 11:
+#line 77 "parse.y" /* yacc.c:1646  */
+    {
+				// 1. use the child's (the child node in the parse tree) linked-list (aka $1)
+				// 2. insert id.str, (aka $3.str), into the linked-list
+				// 3. pass up the head node pointer to the next idlist.
+				// 4. call insert
+				
+				linkedListNode *llnode = (linkedListNode *) malloc(sizeof(linkedListNode));
+				llnode -> next = NULL;
+				strcpy(llnode->identifierName, (yyvsp[0].token).str);
+				insertAtEnd((yyvsp[-2].identifierList), llnode);
+
+				// pass up head pointer
+
+				(yyval.identifierList) = (yyvsp[-2].identifierList);
+			}
+#line 1377 "parse.tab.c" /* yacc.c:1646  */
     break;
 
-  case 14:
-#line 66 "parse.y" /* yacc.c:1646  */
-    {  }
-#line 1369 "parse.tab.c" /* yacc.c:1646  */
-    break;
+  case 12:
+#line 93 "parse.y" /* yacc.c:1646  */
+    {
 
-  case 15:
-#line 69 "parse.y" /* yacc.c:1646  */
-    { }
-#line 1375 "parse.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 16:
-#line 70 "parse.y" /* yacc.c:1646  */
-    { }
-#line 1381 "parse.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 17:
-#line 71 "parse.y" /* yacc.c:1646  */
-    { yyerror("***Error: ';' expected or illegal statement \n");}
-#line 1387 "parse.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 18:
-#line 74 "parse.y" /* yacc.c:1646  */
-    { }
+				// this is the base case 
+				// 1. create linked-list by creating a head node
+				// 2. pass up the pointer to the head node (and consequently the entire linked list)
+			
+				linkedListNode * llnode = (linkedListNode *) malloc(sizeof(linkedListNode));
+				llnode->next = NULL;
+				strcpy(llnode->identifierName, (yyvsp[0].token).str);
+				(yyval.identifierList) = llnode;
+			}
 #line 1393 "parse.tab.c" /* yacc.c:1646  */
     break;
 
-  case 19:
-#line 75 "parse.y" /* yacc.c:1646  */
-    { }
+  case 13:
+#line 106 "parse.y" /* yacc.c:1646  */
+    {  }
 #line 1399 "parse.tab.c" /* yacc.c:1646  */
     break;
 
-  case 20:
-#line 76 "parse.y" /* yacc.c:1646  */
-    { }
+  case 14:
+#line 108 "parse.y" /* yacc.c:1646  */
+    {  }
 #line 1405 "parse.tab.c" /* yacc.c:1646  */
     break;
 
-  case 21:
-#line 77 "parse.y" /* yacc.c:1646  */
+  case 15:
+#line 111 "parse.y" /* yacc.c:1646  */
     { }
 #line 1411 "parse.tab.c" /* yacc.c:1646  */
     break;
 
-  case 22:
-#line 78 "parse.y" /* yacc.c:1646  */
+  case 16:
+#line 112 "parse.y" /* yacc.c:1646  */
     { }
 #line 1417 "parse.tab.c" /* yacc.c:1646  */
     break;
 
-  case 23:
-#line 81 "parse.y" /* yacc.c:1646  */
-    { }
+  case 17:
+#line 113 "parse.y" /* yacc.c:1646  */
+    { yyerror("***Error: ';' expected or illegal statement \n");}
 #line 1423 "parse.tab.c" /* yacc.c:1646  */
     break;
 
-  case 25:
-#line 90 "parse.y" /* yacc.c:1646  */
-    {  }
+  case 18:
+#line 116 "parse.y" /* yacc.c:1646  */
+    { }
 #line 1429 "parse.tab.c" /* yacc.c:1646  */
     break;
 
-  case 26:
-#line 93 "parse.y" /* yacc.c:1646  */
-    {  }
+  case 19:
+#line 117 "parse.y" /* yacc.c:1646  */
+    { }
 #line 1435 "parse.tab.c" /* yacc.c:1646  */
     break;
 
+  case 20:
+#line 118 "parse.y" /* yacc.c:1646  */
+    { }
+#line 1441 "parse.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 21:
+#line 119 "parse.y" /* yacc.c:1646  */
+    { }
+#line 1447 "parse.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 120 "parse.y" /* yacc.c:1646  */
+    { }
+#line 1453 "parse.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 23:
+#line 123 "parse.y" /* yacc.c:1646  */
+    { }
+#line 1459 "parse.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 25:
+#line 132 "parse.y" /* yacc.c:1646  */
+    {  }
+#line 1465 "parse.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 26:
+#line 135 "parse.y" /* yacc.c:1646  */
+    {  }
+#line 1471 "parse.tab.c" /* yacc.c:1646  */
+    break;
+
   case 27:
-#line 97 "parse.y" /* yacc.c:1646  */
+#line 139 "parse.y" /* yacc.c:1646  */
     { 
 				  emit(NOLABEL,
                                        STORE, 
@@ -1443,48 +1479,74 @@ yyreduce:
                                        (yyvsp[-2].targetReg).targetRegister,
                                        EMPTY);
                                 }
-#line 1447 "parse.tab.c" /* yacc.c:1646  */
+#line 1483 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 106 "parse.y" /* yacc.c:1646  */
-    { /* BOGUS  - needs to be fixed */
-                                  int newReg1 = NextRegister();
-                                  int newReg2 = NextRegister();
-                                  int offset = NextOffset(4);
-				  
-                                  (yyval.targetReg).targetRegister = newReg2;
+#line 148 "parse.y" /* yacc.c:1646  */
+    { 
+					int newReg1 = NextRegister();
 
-				  emit(NOLABEL, LOADI, offset, newReg1, EMPTY);
-				  emit(NOLABEL, ADD, 0, newReg1, newReg2);
-				  
+                                        // We have two cases: we either have the variable in the symbol table
+                                        // already, or we don't
+                                        // so let's use an if statement for the two cases
+                                        int offset;
+                                        SymTabEntry * resultOfLookUp = lookup((yyvsp[0].token).str);
+
+                                        //the case that the variable is NOT in the table
+                                        // then we need to most importantly, throw an error,
+                                        // and maybe add it to the symbol table just as filler code
+                                        if ( resultOfLookUp == NULL )
+                                        {
+                                                //throw error instead of inserting
+                                                //Done : insert the proper error code
+                                                printf("\n*** ERROR ***: Variable %s not declared.\n", (yyvsp[0].token).str);
+                                        }
+                                        else
+                                        {
+                                                if (resultOfLookUp -> isArray == 1) {
+                                                        printf("\n*** ERROR ***: Variable %s is not a scalar variable.\n", (yyvsp[0].token).str);
+                                                }
+
+                                                //the case that the variable IS already in the table
+                                                // then all we need to do is pass up the name of the token up to LHS nonterminal
+                                                //so that we can look up the variable later, higher up in the parse tree,
+                                                // for the sake of type checking AND knowing the offset
+                                                offset = resultOfLookUp -> offset;
+
+                                                //// Compute address of variable "i" at offset 0 in reg TODO i think this is right???????? check
+                                                int printOffset = -4; /* default location for printing */
+                                                sprintf(CommentBuffer, "Compute address of variable \"%s\" at offset 0 in register %d", (yyvsp[0].token).str, newReg1);
+                                                emitComment(CommentBuffer);
+                                                emit(NOLABEL, LOADI, offset, newReg1, EMPTY);
+
+                                                (yyval.targetReg).targetRegister = newReg1;
+
+					} 
                          	  }
-#line 1463 "parse.tab.c" /* yacc.c:1646  */
+#line 1528 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 119 "parse.y" /* yacc.c:1646  */
+#line 190 "parse.y" /* yacc.c:1646  */
     {   }
-#line 1469 "parse.tab.c" /* yacc.c:1646  */
+#line 1534 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 122 "parse.y" /* yacc.c:1646  */
-    { int printOffset = -4; /* default location for printing */
-  	                         sprintf(CommentBuffer, "Code for \"PRINT\" from offset %d", printOffset);
-	                         emitComment(CommentBuffer);
-                                 emit(NOLABEL, STOREAI, (yyvsp[-1].targetReg).targetRegister, 0, printOffset);
-                                 emit(NOLABEL, 
-                                      OUTPUTAI, 
-                                      0,
-                                      printOffset, 
-                                      EMPTY);
-                               }
-#line 1484 "parse.tab.c" /* yacc.c:1646  */
+#line 193 "parse.y" /* yacc.c:1646  */
+    { 
+					int printOffset = -4; /* default location for printing */
+  	                        sprintf(CommentBuffer, "Code for \"PRINT\" from offset %d", printOffset);
+	                        emitComment(CommentBuffer);
+                                emit(NOLABEL, STOREAI, (yyvsp[-1].targetReg).targetRegister, 0, printOffset);
+                                emit(NOLABEL, OUTPUTAI, 0, printOffset, EMPTY);
+                         	}
+#line 1546 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 136 "parse.y" /* yacc.c:1646  */
+#line 204 "parse.y" /* yacc.c:1646  */
     { int newReg = NextRegister();
 
                                   (yyval.targetReg).targetRegister = newReg;
@@ -1494,23 +1556,30 @@ yyreduce:
                                        (yyvsp[0].targetReg).targetRegister, 
                                        newReg);
                                 }
-#line 1498 "parse.tab.c" /* yacc.c:1646  */
+#line 1560 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 146 "parse.y" /* yacc.c:1646  */
-    {  }
-#line 1504 "parse.tab.c" /* yacc.c:1646  */
+#line 214 "parse.y" /* yacc.c:1646  */
+    { int newReg = NextRegister();
+
+                                  (yyval.targetReg).targetRegister = newReg;
+                                  emit(NOLABEL, 
+                                       SUB, 
+                                       (yyvsp[-2].targetReg).targetRegister, 
+                                       (yyvsp[0].targetReg).targetRegister, 
+                                       newReg);}
+#line 1573 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 148 "parse.y" /* yacc.c:1646  */
+#line 223 "parse.y" /* yacc.c:1646  */
     {  }
-#line 1510 "parse.tab.c" /* yacc.c:1646  */
+#line 1579 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 151 "parse.y" /* yacc.c:1646  */
+#line 226 "parse.y" /* yacc.c:1646  */
     { /* BOGUS  - needs to be fixed */
 	                          int newReg = NextRegister();
                                   int offset = NextOffset(4);
@@ -1519,73 +1588,90 @@ yyreduce:
 				  emit(NOLABEL, LOADAI, 0, offset, newReg);
                                   
 	                        }
-#line 1523 "parse.tab.c" /* yacc.c:1646  */
+#line 1592 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 160 "parse.y" /* yacc.c:1646  */
+#line 235 "parse.y" /* yacc.c:1646  */
     {   }
-#line 1529 "parse.tab.c" /* yacc.c:1646  */
+#line 1598 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 164 "parse.y" /* yacc.c:1646  */
+#line 239 "parse.y" /* yacc.c:1646  */
     { int newReg = NextRegister();
 	                           (yyval.targetReg).targetRegister = newReg;
 				   emit(NOLABEL, LOADI, (yyvsp[0].token).num, newReg, EMPTY); }
-#line 1537 "parse.tab.c" /* yacc.c:1646  */
+#line 1606 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 168 "parse.y" /* yacc.c:1646  */
+#line 243 "parse.y" /* yacc.c:1646  */
     { yyerror("***Error: illegal expression\n");}
-#line 1543 "parse.tab.c" /* yacc.c:1646  */
+#line 1612 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 171 "parse.y" /* yacc.c:1646  */
+#line 246 "parse.y" /* yacc.c:1646  */
     {  }
-#line 1549 "parse.tab.c" /* yacc.c:1646  */
+#line 1618 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 172 "parse.y" /* yacc.c:1646  */
+#line 247 "parse.y" /* yacc.c:1646  */
     { yyerror("***Error: illegal control expression\n");}
-#line 1555 "parse.tab.c" /* yacc.c:1646  */
+#line 1624 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 176 "parse.y" /* yacc.c:1646  */
+#line 251 "parse.y" /* yacc.c:1646  */
     {  }
-#line 1561 "parse.tab.c" /* yacc.c:1646  */
+#line 1630 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 178 "parse.y" /* yacc.c:1646  */
+#line 253 "parse.y" /* yacc.c:1646  */
     {  }
-#line 1567 "parse.tab.c" /* yacc.c:1646  */
+#line 1636 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 180 "parse.y" /* yacc.c:1646  */
-    {  }
-#line 1573 "parse.tab.c" /* yacc.c:1646  */
+#line 255 "parse.y" /* yacc.c:1646  */
+    {
+					  
+				}
+#line 1644 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 182 "parse.y" /* yacc.c:1646  */
-    {  }
-#line 1579 "parse.tab.c" /* yacc.c:1646  */
+#line 259 "parse.y" /* yacc.c:1646  */
+    {
+					/*
+                                        this attribute does the ILOC code,
+                                        but i still need to figure out what
+                                        is necessary in terms of local information flow
+                                        */
+
+                                        int targReg = NextRegister();
+                                        int register1 = (yyvsp[-2].targetReg).targetRegister;
+                                        int register2 = (yyvsp[0].targetReg).targetRegister;
+
+                                        emit(NOLABEL, CMPLE, register1, register2, targReg);
+
+
+                                        (yyval.targetReg).targetRegister = targReg; 
+				}
+#line 1665 "parse.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 184 "parse.y" /* yacc.c:1646  */
+#line 276 "parse.y" /* yacc.c:1646  */
     { yyerror("***Error: illegal conditional expression\n");}
-#line 1585 "parse.tab.c" /* yacc.c:1646  */
+#line 1671 "parse.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1589 "parse.tab.c" /* yacc.c:1646  */
+#line 1675 "parse.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1813,8 +1899,26 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 187 "parse.y" /* yacc.c:1906  */
+#line 279 "parse.y" /* yacc.c:1906  */
 
+
+linkedListNode *insertAtEnd(linkedListNode *head, linkedListNode *lln) {
+	linkedListNode * temp = NULL;
+
+        if (head != NULL ) {
+                temp = head;
+                while (temp -> next != NULL) {
+                        temp = temp -> next;
+                }
+                lln -> next = NULL;
+                temp -> next = lln;
+        } else {
+                lln -> next = NULL;
+                head = lln;
+        }
+
+        return head;
+}
 
 void yyerror(char* s) {
         fprintf(stderr,"%s\n",s);

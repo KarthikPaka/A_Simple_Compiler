@@ -75,12 +75,14 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 14 "parse.y" /* yacc.c:1909  */
+#line 17 "parse.y" /* yacc.c:1909  */
 tokentype token;
         regInfo targetReg;
+	linkedListNode *identifierList;
+	typeSpecs typeSpec;
        
 
-#line 84 "parse.tab.h" /* yacc.c:1909  */
+#line 86 "parse.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

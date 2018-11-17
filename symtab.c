@@ -58,7 +58,7 @@ lookup(char *name) {
 
 
 void 
-insert(char *name, int offset) {
+insert(char *name, int offset, int isArray) {
   int currentIndex;
   int visitedSlots = 0;
 
@@ -78,6 +78,7 @@ insert(char *name, int offset) {
   HashTable[currentIndex]->name = (char *) malloc (strlen(name)+1);
   strcpy(HashTable[currentIndex]->name, name);
   HashTable[currentIndex]->offset = offset; /* in bytes */
+  HashTable[currentIndex]->isArray = isArray; /* 0 is false, 1 is true */
 }
 
 void 

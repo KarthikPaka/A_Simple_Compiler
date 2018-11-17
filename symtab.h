@@ -20,6 +20,7 @@
 typedef struct { /* need to augment this */
   char *name;
   int offset;
+  int isArray;
 } SymTabEntry;
 
 extern
@@ -29,7 +30,7 @@ extern
 SymTabEntry * lookup(char *name);
 
 extern
-void insert(char *name, int offset);
+void insert(char *name, int offset, int isArray);
 
 extern
 void PrintSymbolTable();
