@@ -11,12 +11,19 @@ typedef union {int num; char *str;} tokentype;
 
 typedef struct {
         int targetRegister;
-        } regInfo;
+} regInfo;
 
 typedef struct linkedListNode {
 	char identifierName[50];
 	struct linkedListNode *next;
 } linkedListNode;
+
+typedef struct labelInfo {
+        int labelOne;
+        int labelTwo;
+        int labelThree;
+        int targetRegister;
+} labelInfo;
 
 typedef struct typeSpecs {
 	int isArray;

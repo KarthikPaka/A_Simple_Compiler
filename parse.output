@@ -40,73 +40,81 @@ Grammar
 
    22 cmpdstmt: BEG stmtlist END
 
-   23 ifstmt: ifhead THEN stmt ELSE stmt
+   23 $@2: %empty
 
-   24 ifhead: IF condexp
+   24 $@3: %empty
 
-   25 fstmt: FOR ctrlexp DO stmt
+   25 ifstmt: ifhead $@2 THEN stmt $@3 ELSE stmt
 
-   26 astmt: lhs ASG exp
+   26 ifhead: IF condexp
 
-   27 lhs: ID
-   28    | ID '[' exp ']'
+   27 $@4: %empty
 
-   29 writestmt: PRINT '(' exp ')'
+   28 $@5: %empty
 
-   30 exp: exp '+' exp
-   31    | exp '-' exp
-   32    | exp '*' exp
-   33    | ID
-   34    | ID '[' exp ']'
-   35    | ICONST
-   36    | error
+   29 fstmt: FOR $@4 ctrlexp $@5 DO stmt
 
-   37 ctrlexp: ID ASG ICONST ',' ICONST
-   38        | error
+   30 astmt: lhs ASG exp
 
-   39 condexp: exp NEQ exp
-   40        | exp EQ exp
-   41        | exp LT exp
-   42        | exp LEQ exp
-   43        | error
+   31 lhs: ID
+   32    | ID '[' exp ']'
+
+   33 writestmt: PRINT '(' exp ')'
+
+   34 exp: exp '+' exp
+   35    | exp '-' exp
+   36    | exp '*' exp
+   37    | ID
+   38    | ID '[' exp ']'
+   39    | ICONST
+   40    | error
+
+   41 ctrlexp: ID ASG ICONST ',' ICONST
+   42        | error
+
+   43 condexp: exp NEQ exp
+   44        | exp EQ exp
+   45        | exp LT exp
+   46        | exp LEQ exp
+   47        | error
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'(' (40) 29
-')' (41) 29
-'*' (42) 32
-'+' (43) 30
-',' (44) 10 37
-'-' (45) 31
+'(' (40) 33
+')' (41) 33
+'*' (42) 36
+'+' (43) 34
+',' (44) 10 41
+'-' (45) 35
 ':' (58) 9
 ';' (59) 2 6 7 8 14
-'[' (91) 12 28 34
-']' (93) 12 28 34
-error (256) 8 16 36 38 43
+'[' (91) 12 32 38
+']' (93) 12 32 38
+error (256) 8 16 40 42 47
 PROG (258) 2
 PERIOD (259) 2
 VAR (260) 5
 INT (261) 12 13
 BOOL (262)
-PRINT (263) 29
-THEN (264) 23
-IF (265) 24
-DO (266) 25
+PRINT (263) 33
+THEN (264) 25
+IF (265) 26
+DO (266) 29
 ARRAY (267) 12
 OF (268) 12
 BEG (269) 22
 END (270) 22
-ASG (271) 26 37
-EQ (272) 40
-NEQ (273) 39
-LT (274) 41
-LEQ (275) 42
-ELSE (276) 23
-FOR (277) 25
-ID (278) 2 10 11 27 28 33 34 37
-ICONST (279) 12 35 37
+ASG (271) 30 41
+EQ (272) 44
+NEQ (273) 43
+LT (274) 45
+LEQ (275) 46
+ELSE (276) 25
+FOR (277) 29
+ID (278) 2 10 11 31 32 37 38 41
+ICONST (279) 12 39 41
 
 
 Nonterminals, with rules where they appear
@@ -132,28 +140,36 @@ type (43)
 stmtlist (44)
     on left: 14 15 16, on right: 14 22
 stmt (45)
-    on left: 17 18 19 20 21, on right: 14 15 23 25
+    on left: 17 18 19 20 21, on right: 14 15 25 29
 cmpdstmt (46)
     on left: 22, on right: 3 21
 ifstmt (47)
-    on left: 23, on right: 17
-ifhead (48)
-    on left: 24, on right: 23
-fstmt (49)
-    on left: 25, on right: 18
-astmt (50)
-    on left: 26, on right: 19
-lhs (51)
-    on left: 27 28, on right: 26
-writestmt (52)
-    on left: 29, on right: 20
-exp (53)
-    on left: 30 31 32 33 34 35 36, on right: 26 28 29 30 31 32 34 39
-    40 41 42
-ctrlexp (54)
-    on left: 37 38, on right: 25
-condexp (55)
-    on left: 39 40 41 42 43, on right: 24
+    on left: 25, on right: 17
+$@2 (48)
+    on left: 23, on right: 25
+$@3 (49)
+    on left: 24, on right: 25
+ifhead (50)
+    on left: 26, on right: 25
+fstmt (51)
+    on left: 29, on right: 18
+$@4 (52)
+    on left: 27, on right: 29
+$@5 (53)
+    on left: 28, on right: 29
+astmt (54)
+    on left: 30, on right: 19
+lhs (55)
+    on left: 31 32, on right: 30
+writestmt (56)
+    on left: 33, on right: 20
+exp (57)
+    on left: 34 35 36 37 38 39 40, on right: 30 32 33 34 35 36 38 43
+    44 45 46
+ctrlexp (58)
+    on left: 41 42, on right: 29
+condexp (59)
+    on left: 43 44 45 46 47, on right: 26
 
 
 State 0
@@ -367,14 +383,14 @@ State 23
 
 State 24
 
-   29 writestmt: PRINT . '(' exp ')'
+   33 writestmt: PRINT . '(' exp ')'
 
     '('  shift, and go to state 42
 
 
 State 25
 
-   24 ifhead: IF . condexp
+   26 ifhead: IF . condexp
 
     error   shift, and go to state 43
     ID      shift, and go to state 44
@@ -386,22 +402,21 @@ State 25
 
 State 26
 
-   25 fstmt: FOR . ctrlexp DO stmt
+   29 fstmt: FOR . $@4 ctrlexp $@5 DO stmt
 
-    error  shift, and go to state 48
-    ID     shift, and go to state 49
+    $default  reduce using rule 27 ($@4)
 
-    ctrlexp  go to state 50
+    $@4  go to state 48
 
 
 State 27
 
-   27 lhs: ID .
-   28    | ID . '[' exp ']'
+   31 lhs: ID .
+   32    | ID . '[' exp ']'
 
-    '['  shift, and go to state 51
+    '['  shift, and go to state 49
 
-    $default  reduce using rule 27 (lhs)
+    $default  reduce using rule 31 (lhs)
 
 
 State 28
@@ -409,8 +424,8 @@ State 28
    14 stmtlist: stmtlist . ';' stmt
    22 cmpdstmt: BEG stmtlist . END
 
-    END  shift, and go to state 52
-    ';'  shift, and go to state 53
+    END  shift, and go to state 50
+    ';'  shift, and go to state 51
 
 
 State 29
@@ -436,9 +451,11 @@ State 31
 
 State 32
 
-   23 ifstmt: ifhead . THEN stmt ELSE stmt
+   25 ifstmt: ifhead . $@2 THEN stmt $@3 ELSE stmt
 
-    THEN  shift, and go to state 54
+    $default  reduce using rule 23 ($@2)
+
+    $@2  go to state 52
 
 
 State 33
@@ -457,9 +474,9 @@ State 34
 
 State 35
 
-   26 astmt: lhs . ASG exp
+   30 astmt: lhs . ASG exp
 
-    ASG  shift, and go to state 55
+    ASG  shift, and go to state 53
 
 
 State 36
@@ -487,7 +504,7 @@ State 39
 
    12 type: ARRAY . '[' ICONST ']' OF INT
 
-    '['  shift, and go to state 56
+    '['  shift, and go to state 54
 
 
 State 40
@@ -506,107 +523,96 @@ State 41
 
 State 42
 
-   29 writestmt: PRINT '(' . exp ')'
+   33 writestmt: PRINT '(' . exp ')'
 
-    error   shift, and go to state 57
+    error   shift, and go to state 55
     ID      shift, and go to state 44
     ICONST  shift, and go to state 45
 
-    exp  go to state 58
+    exp  go to state 56
 
 
 State 43
 
-   36 exp: error .
-   43 condexp: error .
+   40 exp: error .
+   47 condexp: error .
 
-    THEN      reduce using rule 43 (condexp)
-    $default  reduce using rule 36 (exp)
+    THEN      reduce using rule 47 (condexp)
+    $default  reduce using rule 40 (exp)
 
 
 State 44
 
-   33 exp: ID .
-   34    | ID . '[' exp ']'
+   37 exp: ID .
+   38    | ID . '[' exp ']'
 
-    '['  shift, and go to state 59
+    '['  shift, and go to state 57
 
-    $default  reduce using rule 33 (exp)
+    $default  reduce using rule 37 (exp)
 
 
 State 45
 
-   35 exp: ICONST .
+   39 exp: ICONST .
 
-    $default  reduce using rule 35 (exp)
+    $default  reduce using rule 39 (exp)
 
 
 State 46
 
-   30 exp: exp . '+' exp
-   31    | exp . '-' exp
-   32    | exp . '*' exp
-   39 condexp: exp . NEQ exp
-   40        | exp . EQ exp
-   41        | exp . LT exp
-   42        | exp . LEQ exp
+   34 exp: exp . '+' exp
+   35    | exp . '-' exp
+   36    | exp . '*' exp
+   43 condexp: exp . NEQ exp
+   44        | exp . EQ exp
+   45        | exp . LT exp
+   46        | exp . LEQ exp
 
-    EQ   shift, and go to state 60
-    NEQ  shift, and go to state 61
-    LT   shift, and go to state 62
-    LEQ  shift, and go to state 63
-    '+'  shift, and go to state 64
-    '-'  shift, and go to state 65
-    '*'  shift, and go to state 66
+    EQ   shift, and go to state 58
+    NEQ  shift, and go to state 59
+    LT   shift, and go to state 60
+    LEQ  shift, and go to state 61
+    '+'  shift, and go to state 62
+    '-'  shift, and go to state 63
+    '*'  shift, and go to state 64
 
 
 State 47
 
-   24 ifhead: IF condexp .
+   26 ifhead: IF condexp .
 
-    $default  reduce using rule 24 (ifhead)
+    $default  reduce using rule 26 (ifhead)
 
 
 State 48
 
-   38 ctrlexp: error .
+   29 fstmt: FOR $@4 . ctrlexp $@5 DO stmt
 
-    $default  reduce using rule 38 (ctrlexp)
+    error  shift, and go to state 65
+    ID     shift, and go to state 66
+
+    ctrlexp  go to state 67
 
 
 State 49
 
-   37 ctrlexp: ID . ASG ICONST ',' ICONST
+   32 lhs: ID '[' . exp ']'
 
-    ASG  shift, and go to state 67
-
-
-State 50
-
-   25 fstmt: FOR ctrlexp . DO stmt
-
-    DO  shift, and go to state 68
-
-
-State 51
-
-   28 lhs: ID '[' . exp ']'
-
-    error   shift, and go to state 57
+    error   shift, and go to state 55
     ID      shift, and go to state 44
     ICONST  shift, and go to state 45
 
-    exp  go to state 69
+    exp  go to state 68
 
 
-State 52
+State 50
 
    22 cmpdstmt: BEG stmtlist END .
 
     $default  reduce using rule 22 (cmpdstmt)
 
 
-State 53
+State 51
 
    14 stmtlist: stmtlist ';' . stmt
 
@@ -616,7 +622,7 @@ State 53
     FOR    shift, and go to state 26
     ID     shift, and go to state 27
 
-    stmt       go to state 70
+    stmt       go to state 69
     cmpdstmt   go to state 30
     ifstmt     go to state 31
     ifhead     go to state 32
@@ -624,363 +630,187 @@ State 53
     astmt      go to state 34
     lhs        go to state 35
     writestmt  go to state 36
+
+
+State 52
+
+   25 ifstmt: ifhead $@2 . THEN stmt $@3 ELSE stmt
+
+    THEN  shift, and go to state 70
+
+
+State 53
+
+   30 astmt: lhs ASG . exp
+
+    error   shift, and go to state 55
+    ID      shift, and go to state 44
+    ICONST  shift, and go to state 45
+
+    exp  go to state 71
 
 
 State 54
 
-   23 ifstmt: ifhead THEN . stmt ELSE stmt
+   12 type: ARRAY '[' . ICONST ']' OF INT
 
-    PRINT  shift, and go to state 24
-    IF     shift, and go to state 25
-    BEG    shift, and go to state 16
-    FOR    shift, and go to state 26
-    ID     shift, and go to state 27
-
-    stmt       go to state 71
-    cmpdstmt   go to state 30
-    ifstmt     go to state 31
-    ifhead     go to state 32
-    fstmt      go to state 33
-    astmt      go to state 34
-    lhs        go to state 35
-    writestmt  go to state 36
+    ICONST  shift, and go to state 72
 
 
 State 55
 
-   26 astmt: lhs ASG . exp
+   40 exp: error .
 
-    error   shift, and go to state 57
-    ID      shift, and go to state 44
-    ICONST  shift, and go to state 45
-
-    exp  go to state 72
+    $default  reduce using rule 40 (exp)
 
 
 State 56
 
-   12 type: ARRAY '[' . ICONST ']' OF INT
+   33 writestmt: PRINT '(' exp . ')'
+   34 exp: exp . '+' exp
+   35    | exp . '-' exp
+   36    | exp . '*' exp
 
-    ICONST  shift, and go to state 73
+    '+'  shift, and go to state 62
+    '-'  shift, and go to state 63
+    '*'  shift, and go to state 64
+    ')'  shift, and go to state 73
 
 
 State 57
 
-   36 exp: error .
+   38 exp: ID '[' . exp ']'
 
-    $default  reduce using rule 36 (exp)
+    error   shift, and go to state 55
+    ID      shift, and go to state 44
+    ICONST  shift, and go to state 45
+
+    exp  go to state 74
 
 
 State 58
 
-   29 writestmt: PRINT '(' exp . ')'
-   30 exp: exp . '+' exp
-   31    | exp . '-' exp
-   32    | exp . '*' exp
+   44 condexp: exp EQ . exp
 
-    '+'  shift, and go to state 64
-    '-'  shift, and go to state 65
-    '*'  shift, and go to state 66
-    ')'  shift, and go to state 74
-
-
-State 59
-
-   34 exp: ID '[' . exp ']'
-
-    error   shift, and go to state 57
+    error   shift, and go to state 55
     ID      shift, and go to state 44
     ICONST  shift, and go to state 45
 
     exp  go to state 75
 
 
-State 60
+State 59
 
-   40 condexp: exp EQ . exp
+   43 condexp: exp NEQ . exp
 
-    error   shift, and go to state 57
+    error   shift, and go to state 55
     ID      shift, and go to state 44
     ICONST  shift, and go to state 45
 
     exp  go to state 76
 
 
-State 61
+State 60
 
-   39 condexp: exp NEQ . exp
+   45 condexp: exp LT . exp
 
-    error   shift, and go to state 57
+    error   shift, and go to state 55
     ID      shift, and go to state 44
     ICONST  shift, and go to state 45
 
     exp  go to state 77
 
 
-State 62
+State 61
 
-   41 condexp: exp LT . exp
+   46 condexp: exp LEQ . exp
 
-    error   shift, and go to state 57
+    error   shift, and go to state 55
     ID      shift, and go to state 44
     ICONST  shift, and go to state 45
 
     exp  go to state 78
 
 
-State 63
+State 62
 
-   42 condexp: exp LEQ . exp
+   34 exp: exp '+' . exp
 
-    error   shift, and go to state 57
+    error   shift, and go to state 55
     ID      shift, and go to state 44
     ICONST  shift, and go to state 45
 
     exp  go to state 79
 
 
-State 64
+State 63
 
-   30 exp: exp '+' . exp
+   35 exp: exp '-' . exp
 
-    error   shift, and go to state 57
+    error   shift, and go to state 55
     ID      shift, and go to state 44
     ICONST  shift, and go to state 45
 
     exp  go to state 80
 
 
-State 65
+State 64
 
-   31 exp: exp '-' . exp
+   36 exp: exp '*' . exp
 
-    error   shift, and go to state 57
+    error   shift, and go to state 55
     ID      shift, and go to state 44
     ICONST  shift, and go to state 45
 
     exp  go to state 81
 
 
+State 65
+
+   42 ctrlexp: error .
+
+    $default  reduce using rule 42 (ctrlexp)
+
+
 State 66
 
-   32 exp: exp '*' . exp
+   41 ctrlexp: ID . ASG ICONST ',' ICONST
 
-    error   shift, and go to state 57
-    ID      shift, and go to state 44
-    ICONST  shift, and go to state 45
-
-    exp  go to state 82
+    ASG  shift, and go to state 82
 
 
 State 67
 
-   37 ctrlexp: ID ASG . ICONST ',' ICONST
+   29 fstmt: FOR $@4 ctrlexp . $@5 DO stmt
 
-    ICONST  shift, and go to state 83
+    $default  reduce using rule 28 ($@5)
+
+    $@5  go to state 83
 
 
 State 68
 
-   25 fstmt: FOR ctrlexp DO . stmt
+   32 lhs: ID '[' exp . ']'
+   34 exp: exp . '+' exp
+   35    | exp . '-' exp
+   36    | exp . '*' exp
 
-    PRINT  shift, and go to state 24
-    IF     shift, and go to state 25
-    BEG    shift, and go to state 16
-    FOR    shift, and go to state 26
-    ID     shift, and go to state 27
-
-    stmt       go to state 84
-    cmpdstmt   go to state 30
-    ifstmt     go to state 31
-    ifhead     go to state 32
-    fstmt      go to state 33
-    astmt      go to state 34
-    lhs        go to state 35
-    writestmt  go to state 36
+    '+'  shift, and go to state 62
+    '-'  shift, and go to state 63
+    '*'  shift, and go to state 64
+    ']'  shift, and go to state 84
 
 
 State 69
-
-   28 lhs: ID '[' exp . ']'
-   30 exp: exp . '+' exp
-   31    | exp . '-' exp
-   32    | exp . '*' exp
-
-    '+'  shift, and go to state 64
-    '-'  shift, and go to state 65
-    '*'  shift, and go to state 66
-    ']'  shift, and go to state 85
-
-
-State 70
 
    14 stmtlist: stmtlist ';' stmt .
 
     $default  reduce using rule 14 (stmtlist)
 
 
-State 71
+State 70
 
-   23 ifstmt: ifhead THEN stmt . ELSE stmt
-
-    ELSE  shift, and go to state 86
-
-
-State 72
-
-   26 astmt: lhs ASG exp .
-   30 exp: exp . '+' exp
-   31    | exp . '-' exp
-   32    | exp . '*' exp
-
-    '+'  shift, and go to state 64
-    '-'  shift, and go to state 65
-    '*'  shift, and go to state 66
-
-    $default  reduce using rule 26 (astmt)
-
-
-State 73
-
-   12 type: ARRAY '[' ICONST . ']' OF INT
-
-    ']'  shift, and go to state 87
-
-
-State 74
-
-   29 writestmt: PRINT '(' exp ')' .
-
-    $default  reduce using rule 29 (writestmt)
-
-
-State 75
-
-   30 exp: exp . '+' exp
-   31    | exp . '-' exp
-   32    | exp . '*' exp
-   34    | ID '[' exp . ']'
-
-    '+'  shift, and go to state 64
-    '-'  shift, and go to state 65
-    '*'  shift, and go to state 66
-    ']'  shift, and go to state 88
-
-
-State 76
-
-   30 exp: exp . '+' exp
-   31    | exp . '-' exp
-   32    | exp . '*' exp
-   40 condexp: exp EQ exp .
-
-    '+'  shift, and go to state 64
-    '-'  shift, and go to state 65
-    '*'  shift, and go to state 66
-
-    $default  reduce using rule 40 (condexp)
-
-
-State 77
-
-   30 exp: exp . '+' exp
-   31    | exp . '-' exp
-   32    | exp . '*' exp
-   39 condexp: exp NEQ exp .
-
-    '+'  shift, and go to state 64
-    '-'  shift, and go to state 65
-    '*'  shift, and go to state 66
-
-    $default  reduce using rule 39 (condexp)
-
-
-State 78
-
-   30 exp: exp . '+' exp
-   31    | exp . '-' exp
-   32    | exp . '*' exp
-   41 condexp: exp LT exp .
-
-    '+'  shift, and go to state 64
-    '-'  shift, and go to state 65
-    '*'  shift, and go to state 66
-
-    $default  reduce using rule 41 (condexp)
-
-
-State 79
-
-   30 exp: exp . '+' exp
-   31    | exp . '-' exp
-   32    | exp . '*' exp
-   42 condexp: exp LEQ exp .
-
-    '+'  shift, and go to state 64
-    '-'  shift, and go to state 65
-    '*'  shift, and go to state 66
-
-    $default  reduce using rule 42 (condexp)
-
-
-State 80
-
-   30 exp: exp . '+' exp
-   30    | exp '+' exp .
-   31    | exp . '-' exp
-   32    | exp . '*' exp
-
-    '*'  shift, and go to state 66
-
-    $default  reduce using rule 30 (exp)
-
-
-State 81
-
-   30 exp: exp . '+' exp
-   31    | exp . '-' exp
-   31    | exp '-' exp .
-   32    | exp . '*' exp
-
-    '*'  shift, and go to state 66
-
-    $default  reduce using rule 31 (exp)
-
-
-State 82
-
-   30 exp: exp . '+' exp
-   31    | exp . '-' exp
-   32    | exp . '*' exp
-   32    | exp '*' exp .
-
-    $default  reduce using rule 32 (exp)
-
-
-State 83
-
-   37 ctrlexp: ID ASG ICONST . ',' ICONST
-
-    ','  shift, and go to state 89
-
-
-State 84
-
-   25 fstmt: FOR ctrlexp DO stmt .
-
-    $default  reduce using rule 25 (fstmt)
-
-
-State 85
-
-   28 lhs: ID '[' exp ']' .
-
-    $default  reduce using rule 28 (lhs)
-
-
-State 86
-
-   23 ifstmt: ifhead THEN stmt ELSE . stmt
+   25 ifstmt: ifhead $@2 THEN . stmt $@3 ELSE stmt
 
     PRINT  shift, and go to state 24
     IF     shift, and go to state 25
@@ -988,7 +818,7 @@ State 86
     FOR    shift, and go to state 26
     ID     shift, and go to state 27
 
-    stmt       go to state 90
+    stmt       go to state 85
     cmpdstmt   go to state 30
     ifstmt     go to state 31
     ifhead     go to state 32
@@ -998,50 +828,272 @@ State 86
     writestmt  go to state 36
 
 
-State 87
+State 71
+
+   30 astmt: lhs ASG exp .
+   34 exp: exp . '+' exp
+   35    | exp . '-' exp
+   36    | exp . '*' exp
+
+    '+'  shift, and go to state 62
+    '-'  shift, and go to state 63
+    '*'  shift, and go to state 64
+
+    $default  reduce using rule 30 (astmt)
+
+
+State 72
+
+   12 type: ARRAY '[' ICONST . ']' OF INT
+
+    ']'  shift, and go to state 86
+
+
+State 73
+
+   33 writestmt: PRINT '(' exp ')' .
+
+    $default  reduce using rule 33 (writestmt)
+
+
+State 74
+
+   34 exp: exp . '+' exp
+   35    | exp . '-' exp
+   36    | exp . '*' exp
+   38    | ID '[' exp . ']'
+
+    '+'  shift, and go to state 62
+    '-'  shift, and go to state 63
+    '*'  shift, and go to state 64
+    ']'  shift, and go to state 87
+
+
+State 75
+
+   34 exp: exp . '+' exp
+   35    | exp . '-' exp
+   36    | exp . '*' exp
+   44 condexp: exp EQ exp .
+
+    '+'  shift, and go to state 62
+    '-'  shift, and go to state 63
+    '*'  shift, and go to state 64
+
+    $default  reduce using rule 44 (condexp)
+
+
+State 76
+
+   34 exp: exp . '+' exp
+   35    | exp . '-' exp
+   36    | exp . '*' exp
+   43 condexp: exp NEQ exp .
+
+    '+'  shift, and go to state 62
+    '-'  shift, and go to state 63
+    '*'  shift, and go to state 64
+
+    $default  reduce using rule 43 (condexp)
+
+
+State 77
+
+   34 exp: exp . '+' exp
+   35    | exp . '-' exp
+   36    | exp . '*' exp
+   45 condexp: exp LT exp .
+
+    '+'  shift, and go to state 62
+    '-'  shift, and go to state 63
+    '*'  shift, and go to state 64
+
+    $default  reduce using rule 45 (condexp)
+
+
+State 78
+
+   34 exp: exp . '+' exp
+   35    | exp . '-' exp
+   36    | exp . '*' exp
+   46 condexp: exp LEQ exp .
+
+    '+'  shift, and go to state 62
+    '-'  shift, and go to state 63
+    '*'  shift, and go to state 64
+
+    $default  reduce using rule 46 (condexp)
+
+
+State 79
+
+   34 exp: exp . '+' exp
+   34    | exp '+' exp .
+   35    | exp . '-' exp
+   36    | exp . '*' exp
+
+    '*'  shift, and go to state 64
+
+    $default  reduce using rule 34 (exp)
+
+
+State 80
+
+   34 exp: exp . '+' exp
+   35    | exp . '-' exp
+   35    | exp '-' exp .
+   36    | exp . '*' exp
+
+    '*'  shift, and go to state 64
+
+    $default  reduce using rule 35 (exp)
+
+
+State 81
+
+   34 exp: exp . '+' exp
+   35    | exp . '-' exp
+   36    | exp . '*' exp
+   36    | exp '*' exp .
+
+    $default  reduce using rule 36 (exp)
+
+
+State 82
+
+   41 ctrlexp: ID ASG . ICONST ',' ICONST
+
+    ICONST  shift, and go to state 88
+
+
+State 83
+
+   29 fstmt: FOR $@4 ctrlexp $@5 . DO stmt
+
+    DO  shift, and go to state 89
+
+
+State 84
+
+   32 lhs: ID '[' exp ']' .
+
+    $default  reduce using rule 32 (lhs)
+
+
+State 85
+
+   25 ifstmt: ifhead $@2 THEN stmt . $@3 ELSE stmt
+
+    $default  reduce using rule 24 ($@3)
+
+    $@3  go to state 90
+
+
+State 86
 
    12 type: ARRAY '[' ICONST ']' . OF INT
 
     OF  shift, and go to state 91
 
 
+State 87
+
+   38 exp: ID '[' exp ']' .
+
+    $default  reduce using rule 38 (exp)
+
+
 State 88
 
-   34 exp: ID '[' exp ']' .
+   41 ctrlexp: ID ASG ICONST . ',' ICONST
 
-    $default  reduce using rule 34 (exp)
+    ','  shift, and go to state 92
 
 
 State 89
 
-   37 ctrlexp: ID ASG ICONST ',' . ICONST
+   29 fstmt: FOR $@4 ctrlexp $@5 DO . stmt
 
-    ICONST  shift, and go to state 92
+    PRINT  shift, and go to state 24
+    IF     shift, and go to state 25
+    BEG    shift, and go to state 16
+    FOR    shift, and go to state 26
+    ID     shift, and go to state 27
+
+    stmt       go to state 93
+    cmpdstmt   go to state 30
+    ifstmt     go to state 31
+    ifhead     go to state 32
+    fstmt      go to state 33
+    astmt      go to state 34
+    lhs        go to state 35
+    writestmt  go to state 36
 
 
 State 90
 
-   23 ifstmt: ifhead THEN stmt ELSE stmt .
+   25 ifstmt: ifhead $@2 THEN stmt $@3 . ELSE stmt
 
-    $default  reduce using rule 23 (ifstmt)
+    ELSE  shift, and go to state 94
 
 
 State 91
 
    12 type: ARRAY '[' ICONST ']' OF . INT
 
-    INT  shift, and go to state 93
+    INT  shift, and go to state 95
 
 
 State 92
 
-   37 ctrlexp: ID ASG ICONST ',' ICONST .
+   41 ctrlexp: ID ASG ICONST ',' . ICONST
 
-    $default  reduce using rule 37 (ctrlexp)
+    ICONST  shift, and go to state 96
 
 
 State 93
 
+   29 fstmt: FOR $@4 ctrlexp $@5 DO stmt .
+
+    $default  reduce using rule 29 (fstmt)
+
+
+State 94
+
+   25 ifstmt: ifhead $@2 THEN stmt $@3 ELSE . stmt
+
+    PRINT  shift, and go to state 24
+    IF     shift, and go to state 25
+    BEG    shift, and go to state 16
+    FOR    shift, and go to state 26
+    ID     shift, and go to state 27
+
+    stmt       go to state 97
+    cmpdstmt   go to state 30
+    ifstmt     go to state 31
+    ifhead     go to state 32
+    fstmt      go to state 33
+    astmt      go to state 34
+    lhs        go to state 35
+    writestmt  go to state 36
+
+
+State 95
+
    12 type: ARRAY '[' ICONST ']' OF INT .
 
     $default  reduce using rule 12 (type)
+
+
+State 96
+
+   41 ctrlexp: ID ASG ICONST ',' ICONST .
+
+    $default  reduce using rule 41 (ctrlexp)
+
+
+State 97
+
+   25 ifstmt: ifhead $@2 THEN stmt $@3 ELSE stmt .
+
+    $default  reduce using rule 25 (ifstmt)

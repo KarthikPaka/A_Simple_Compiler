@@ -80,9 +80,10 @@ tokentype token;
         regInfo targetReg;
 	linkedListNode *identifierList;
 	typeSpecs typeSpec;
-       
+       	labelInfo labelINF;
+	
 
-#line 86 "parse.tab.h" /* yacc.c:1909  */
+#line 87 "parse.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
