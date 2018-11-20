@@ -81,9 +81,10 @@ tokentype token;
 	linkedListNode *identifierList;
 	typeSpecs typeSpec;
        	labelInfo labelINF;
+	ctrlExp ctrlExpInfo;
 	
 
-#line 87 "parse.tab.h" /* yacc.c:1909  */
+#line 88 "parse.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

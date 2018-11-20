@@ -30,6 +30,11 @@ typedef struct typeSpecs {
 	int size;
 } typeSpecs;
 
+typedef struct ctrlExp {
+	int num;
+	int upperBoundReg;
+} ctrlExp;
+
 #endif
 
 

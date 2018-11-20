@@ -19,6 +19,7 @@ char *CommentBuffer;
 	linkedListNode *identifierList;
 	typeSpecs typeSpec;
        	labelInfo labelINF;
+	ctrlExp ctrlExpInfo;
 	}
 
 %token PROG PERIOD VAR 
@@ -31,7 +32,7 @@ char *CommentBuffer;
 %token <token> ID ICONST 
 
 %type <labelINF> ifhead
-%type <targetReg> ctrlexp
+%type <ctrlExpInfo> ctrlexp
 
 %type <typeSpec> type
 %type <targetReg> exp 
@@ -164,22 +165,34 @@ fstmt	: FOR   {
                         $1.labelTwo = label2;
                         $1.labelThree = label3;
 
-                        emit($1.labelOne, NOP, EMPTY, EMPTY, EMPTY);
-                        //// This is the body of the for loop
-                        int printOffset = -4; /* default location for printing */
-                        sprintf(CommentBuffer, "Control code for \"FOR\"");
-                        emitComment(CommentBuffer);
+                        
 		}
 	  ctrlexp {
-			emit(NOLABEL, CBR, $3.targetRegister, $1.labelTwo, $1.labelThree);
+			int regThatHoldsValueOfInductionVariableRetirevedFromMemory = NextRegister();
+			int regThatHoldsValueOfConditionalExpression = NextRegister();
+	
+                        //// This is the body of the for loop
+                        //int printOffset = -4; /* default location for printing */
+                        sprintf(CommentBuffer, "Generate control code for \"FOR\"");
+                        emitComment(CommentBuffer);
+			emit($1.labelOne, LOADAI, 0, $3.num, regThatHoldsValueOfInductionVariableRetirevedFromMemory);
+			emit(NOLABEL, CMPLE, regThatHoldsValueOfInductionVariableRetirevedFromMemory, $3.upperBoundReg, regThatHoldsValueOfConditionalExpression);
+			emit(NOLABEL, CBR, regThatHoldsValueOfConditionalExpression, $1.labelTwo, $1.labelThree);
                         emit($1.labelTwo, NOP, EMPTY, EMPTY, EMPTY);
                         // // Body of "FOR" construct starts here
 
-                        int printOffset = -4; /* default location for printing */
-                        sprintf(CommentBuffer, "Body of \"FOR\" construct starts here");
-                        emitComment(CommentBuffer);
+                        //int printOffset = -4; /* default location for printing */
+                        //sprintf(CommentBuffer, "Body of \"FOR\" construct starts here");
+                        //emitComment(CommentBuffer);
 		  } 
 	  DO stmt  {
+			int regThatHoldsValueOfInductionVariableRetirevedFromMemory = NextRegister();
+			int iPlusOne = NextRegister();	
+
+			emit(NOLABEL, LOADAI, 0, $3.num, regThatHoldsValueOfInductionVariableRetirevedFromMemory);
+			emit(NOLABEL, ADDI, regThatHoldsValueOfInductionVariableRetirevedFromMemory, 1, iPlusOne);			
+			emit(NOLABEL, STOREAI, iPlusOne, 0, $3.num);
+
 			emit(NOLABEL, BR, $1.labelOne, EMPTY, EMPTY);
 	                emit($1.labelThree, NOP, EMPTY, EMPTY, EMPTY);
 		   } 
@@ -233,8 +246,47 @@ lhs	: ID			{
                          	  }
 
 
-                                |  ID '[' exp ']' {   }
-                                ;
+                |  ID '[' exp ']' {
+			 		int newReg1 = NextRegister();
+                                        int newReg2 = NextRegister();
+                                        int newReg3 = NextRegister();
+                                        int newReg4 = NextRegister();
+                                        int newReg5 = NextRegister();
+                                        int newReg6 = NextRegister();
+
+                                        SymTabEntry * resultOfLookup = lookup($1.str);
+
+                                        if (resultOfLookup == NULL)
+                                        {
+                                                //if not in symbol table
+                                                //print error
+                                                printf("\n*** ERROR ***: Variable %s not declared.\n", $1.str);
+                                        }
+                                        else
+                                        {
+
+                                                if (resultOfLookup -> isArray == 0)
+                                                {
+                                                        printf("\n*** ERROR ***: Variable %s is not an array variable.\n", $1.str);
+                                                        //*** ERROR ***: Variable a is not a scalar variable.\n");
+                                                }
+
+                                                int RegisterContainingOffsetFromBase = $3.targetRegister;
+                                                int offsetOfBase = resultOfLookup -> offset;
+
+                                                //// Compute address of array variable "b" with base ad
+                                                int printOffset = -4; /* default location for printing */
+                                                sprintf(CommentBuffer, "Compute address of array variable \"%s\" with base address %d", $1.str, offsetOfBase);
+                                                emitComment(CommentBuffer);
+                                                emit(NOLABEL, LOADI, 4, newReg3, EMPTY);
+                                                emit(NOLABEL, MULT, RegisterContainingOffsetFromBase, newReg3, newReg1);
+                                                emit(NOLABEL, LOADI, offsetOfBase, newReg6, EMPTY);
+                                                emit(NOLABEL, ADD, newReg1, newReg6, newReg2);
+
+                                                $$.targetRegister = newReg2;
+					}
+				}
+                ;
 
 writestmt: PRINT '(' exp ')' 	{ 
 					int printOffset = -4; /* default location for printing */
@@ -243,7 +295,7 @@ writestmt: PRINT '(' exp ')' 	{
                                 	emit(NOLABEL, STOREAI, $3.targetRegister, 0, printOffset);
                                 	emit(NOLABEL, OUTPUTAI, 0, printOffset, EMPTY);
                          	}
-	;
+
 
 
 
@@ -299,7 +351,44 @@ exp	: exp '+' exp		{
   
 	                        }
 
-        | ID '[' exp ']'	{   }
+        | ID '[' exp ']'	   {
+					int newReg1 = NextRegister();
+                                        int newReg2 = NextRegister();
+                                        int newReg3 = NextRegister();
+                                        int newReg4 = NextRegister();
+                                        int newReg5 = NextRegister();
+
+                                        SymTabEntry * resultOfLookup = lookup($1.str);
+
+                                        if (resultOfLookup == NULL)
+                                        {
+                                                //if not in symbol table, then print error
+                                                printf("\n*** ERROR ***: Variable %s is not a scalar variable.\n", $1.str);
+                                        }
+                                        else
+                                        {
+                                                if (resultOfLookup -> isArray == 0)
+                                                {
+                                                        printf("\n*** ERROR ***: Variable %s is not an array variable.\n", $1.str);
+                                                                //*** ERROR ***: Variable a is not a scalar variable.\n");
+                                                }
+
+                                                int RegisterContainingOffsetFromBase = $3.targetRegister;
+                                                int offsetOfBase = resultOfLookup -> offset;
+
+                                                // Load RHS value of array variable "b" with based address %d
+                                                int printOffset = -4; /* default location for printing */
+                                                sprintf(CommentBuffer, "Load RHS value of array variable \"%s\" with base address %d", $1.str, offsetOfBase);
+                                                emitComment(CommentBuffer);
+                                                emit(NOLABEL, LOADI, 4, newReg3, EMPTY);
+                                                emit(NOLABEL, MULT, RegisterContainingOffsetFromBase, newReg3, newReg1);
+                                                emit(NOLABEL, LOADI, offsetOfBase, newReg5, EMPTY);
+                                                emit(NOLABEL, ADD, newReg1, newReg5, newReg2);
+                                                emit(NOLABEL, LOADAO, 0, newReg2, newReg4);
+
+                                                $$.targetRegister = newReg4;
+                                        }  
+				   }
  
 
 
@@ -315,19 +404,20 @@ ctrlexp	: ID ASG ICONST ',' ICONST {
 					int offsetRegister = NextRegister();
 					int lowerBoundRegister = NextRegister();
 					int upperBoundRegister = NextRegister();
-					int targReg = NextRegister();
+					//int targReg = NextRegister();
 					SymTabEntry *resultOfLookUp = lookup($1.str); 
 					int offset = resultOfLookUp -> offset;
 
 					sprintf(CommentBuffer, "Initialize ind. variable \"%s\" at offset %d with lower bound value %d", $1.str, offset, $3.num);
-				   
+					emitComment(CommentBuffer);			   
 					
 					emit(NOLABEL, LOADI, offset, offsetRegister, EMPTY);
 					emit(NOLABEL, LOADI, $3.num, lowerBoundRegister, EMPTY);
 					emit(NOLABEL, LOADI, $5.num, upperBoundRegister, EMPTY);
 					emit(NOLABEL, STOREAO, lowerBoundRegister, 0, offsetRegister);
 					
-					$$.targetRegister = targReg;
+					$$.num = offset;
+					$$.upperBoundReg = upperBoundRegister;
 
 				   }
 	| error { yyerror("***Error: illegal control expression\n");}  
