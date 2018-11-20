@@ -9,10 +9,10 @@
  	 loadI 1 	=> r8 
  	 storeAO r8 	=> r0, r3 
  	 loadI 0 	=> r9 
-	// Compute address of array variable "c" with base address 4
+	// Compute address of array variable "c" with base address 44
  	 loadI 4 	=> r12 
  	 mult r9, r12 	=> r10 
- 	 loadI 4 	=> r15 
+ 	 loadI 44 	=> r15 
  	 add r10, r15 	=> r11 
  	 loadI 1 	=> r16 
  	 storeAO r16 	=> r0, r11 
@@ -27,10 +27,10 @@
  	 storeAI r21 	=> r0, -4 
  	 outputAI r0, -4
  	 loadI 0 	=> r23 
-	// Load RHS value of array variable "c" with base address 4
+	// Load RHS value of array variable "c" with base address 44
  	 loadI 4 	=> r26 
  	 mult r23, r26 	=> r24 
- 	 loadI 4 	=> r28 
+ 	 loadI 44 	=> r28 
  	 add r24, r28 	=> r25 
  	 loadAO r0, r25 	=> r27 
 	// Code for "PRINT" from offset -4
@@ -81,19 +81,19 @@ L1:	 nop
  	 storeAO r59 	=> r0, r38 
 	// Load RHS value of variable "i" at offset 0
  	 loadAI r0, 0 	=> r60 
-	// Compute address of array variable "c" with base address 4
+	// Compute address of array variable "c" with base address 44
  	 loadI 4 	=> r63 
  	 mult r60, r63 	=> r61 
- 	 loadI 4 	=> r66 
+ 	 loadI 44 	=> r66 
  	 add r61, r66 	=> r62 
 	// Load RHS value of variable "i" at offset 0
  	 loadAI r0, 0 	=> r67 
  	 loadI 1 	=> r68 
  	 sub r67, r68 	=> r69 
-	// Load RHS value of array variable "c" with base address 4
+	// Load RHS value of array variable "c" with base address 44
  	 loadI 4 	=> r72 
  	 mult r69, r72 	=> r70 
- 	 loadI 4 	=> r74 
+ 	 loadI 44 	=> r74 
  	 add r70, r74 	=> r71 
  	 loadAO r0, r71 	=> r73 
  	 loadI 1 	=> r75 
@@ -112,10 +112,10 @@ L1:	 nop
  	 outputAI r0, -4
 	// Load RHS value of variable "i" at offset 0
  	 loadAI r0, 0 	=> r83 
-	// Load RHS value of array variable "c" with base address 4
+	// Load RHS value of array variable "c" with base address 44
  	 loadI 4 	=> r86 
  	 mult r83, r86 	=> r84 
- 	 loadI 4 	=> r88 
+ 	 loadI 44 	=> r88 
  	 add r84, r88 	=> r85 
  	 loadAO r0, r85 	=> r87 
 	// Code for "PRINT" from offset -4

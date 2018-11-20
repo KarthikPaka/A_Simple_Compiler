@@ -108,7 +108,10 @@ idlist	: idlist ',' ID {
 			}
 	;
 
-type	: ARRAY '[' ICONST ']' OF INT {  }
+type	: ARRAY '[' ICONST ']' OF INT {
+						$$.isArray = 1;
+                                                $$.size = $3.num;
+				      }
 
         | INT { $$.isArray = 0;
                 $$.size = 1; }
