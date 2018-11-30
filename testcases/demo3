@@ -9,5 +9,6 @@ begin
     a := a + 2;
     b := b + 1
   end;	
-  print(a)
+  print(a);
+  print(b)
 end.

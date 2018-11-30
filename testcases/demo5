@@ -9,7 +9,7 @@ begin
   print(b[0]);
   print(c[0]);
   i := 1;
-  for i := 0, 9 do
+  for i := 1, 9 do
   begin  
     b[i] := b[i-1] + b[i-1];
     c[i] := c[i-1] + 1;

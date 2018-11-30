@@ -1,128 +1,60 @@
 	// Assign STATIC_AREA_ADDRESS to register "r0"
  	 loadI 1024 	=> r0 
+	// variable "a" @ offset 0 => register 1
  	 loadI 0 	=> r1 
-	// Compute address of array variable "b" with base address 4
- 	 loadI 4 	=> r4 
- 	 mult r1, r4 	=> r2 
- 	 loadI 4 	=> r7 
- 	 add r2, r7 	=> r3 
- 	 loadI 1 	=> r8 
- 	 storeAO r8 	=> r0, r3 
- 	 loadI 0 	=> r9 
-	// Compute address of array variable "c" with base address 44
- 	 loadI 4 	=> r12 
- 	 mult r9, r12 	=> r10 
- 	 loadI 44 	=> r15 
- 	 add r10, r15 	=> r11 
- 	 loadI 1 	=> r16 
- 	 storeAO r16 	=> r0, r11 
- 	 loadI 0 	=> r17 
-	// Load RHS value of array variable "b" with base address 4
- 	 loadI 4 	=> r20 
- 	 mult r17, r20 	=> r18 
- 	 loadI 4 	=> r22 
- 	 add r18, r22 	=> r19 
- 	 loadAO r0, r19 	=> r21 
-	// Code for "PRINT" from offset -4
- 	 storeAI r21 	=> r0, -4 
- 	 outputAI r0, -4
- 	 loadI 0 	=> r23 
-	// Load RHS value of array variable "c" with base address 44
- 	 loadI 4 	=> r26 
- 	 mult r23, r26 	=> r24 
- 	 loadI 44 	=> r28 
- 	 add r24, r28 	=> r25 
- 	 loadAO r0, r25 	=> r27 
+ 	 loadI 1 	=> r2 
+ 	 storeAO r2 	=> r0, r1 
+	// variable "b" @ offset 4 => register 3
+ 	 loadI 4 	=> r3 
+ 	 loadI 10 	=> r4 
+ 	 storeAO r4 	=> r0, r3 
+	// Initialize ind. variable "i" at offset 8 with lower bound value 1
+ 	 loadI 8 	=> r5 
+ 	 loadI 1 	=> r6 
+ 	 loadI 100 	=> r7 
+ 	 storeAO r6 	=> r0, r5 
+	// Generate control code for "FOR"
+L0:	 loadAI r0, 8 	=> r8 
+ 	 cmp_LE r8, r7 	=> r9
+ 	 cbr r9 	=> L1, L2
+L1:	 nop 
+	// variable "a" @ offset 0 => register 10
+ 	 loadI 0 	=> r10 
+	// Load RHS value of variable "a" at offset 0
+ 	 loadAI r0, 0 	=> r11 
+ 	 loadI 2 	=> r12 
+ 	 add r11, r12 	=> r13 
+ 	 storeAO r13 	=> r0, r10 
+	// Initialize ind. variable "b" at offset 4 with lower bound value 1
+ 	 loadI 4 	=> r14 
+ 	 loadI 1 	=> r15 
+ 	 loadI 10 	=> r16 
+ 	 storeAO r15 	=> r0, r14 
+	// Generate control code for "FOR"
+L3:	 loadAI r0, 4 	=> r17 
+ 	 cmp_LE r17, r16 	=> r18
+ 	 cbr r18 	=> L4, L5
+L4:	 nop 
+	// variable "a" @ offset 0 => register 19
+ 	 loadI 0 	=> r19 
+	// Load RHS value of variable "a" at offset 0
+ 	 loadAI r0, 0 	=> r20 
+	// Load RHS value of variable "b" at offset 4
+ 	 loadAI r0, 4 	=> r21 
+ 	 add r20, r21 	=> r22 
+ 	 storeAO r22 	=> r0, r19 
+ 	 loadAI r0, 4 	=> r23 
+ 	 addI r23, 1 	=> r24 
+ 	 storeAI r24 	=> r0, 4 
+ 	 br L3
+L5:	 nop 
+ 	 loadAI r0, 8 	=> r25 
+ 	 addI r25, 1 	=> r26 
+ 	 storeAI r26 	=> r0, 8 
+ 	 br L0
+L2:	 nop 
+	// Load RHS value of variable "a" at offset 0
+ 	 loadAI r0, 0 	=> r27 
 	// Code for "PRINT" from offset -4
  	 storeAI r27 	=> r0, -4 
  	 outputAI r0, -4
-	// variable "i" @ offset 0 => register 29
- 	 loadI 0 	=> r29 
- 	 loadI 1 	=> r30 
- 	 storeAO r30 	=> r0, r29 
-	// Initialize ind. variable "i" at offset 0 with lower bound value 0
- 	 loadI 0 	=> r31 
- 	 loadI 0 	=> r32 
- 	 loadI 9 	=> r33 
- 	 storeAO r32 	=> r0, r31 
-	// Generate control code for "FOR"
-L0:	 loadAI r0, 0 	=> r34 
- 	 cmp_LE r34, r33 	=> r35
- 	 cbr r35 	=> L1, L2
-L1:	 nop 
-	// Load RHS value of variable "i" at offset 0
- 	 loadAI r0, 0 	=> r36 
-	// Compute address of array variable "b" with base address 4
- 	 loadI 4 	=> r39 
- 	 mult r36, r39 	=> r37 
- 	 loadI 4 	=> r42 
- 	 add r37, r42 	=> r38 
-	// Load RHS value of variable "i" at offset 0
- 	 loadAI r0, 0 	=> r43 
- 	 loadI 1 	=> r44 
- 	 sub r43, r44 	=> r45 
-	// Load RHS value of array variable "b" with base address 4
- 	 loadI 4 	=> r48 
- 	 mult r45, r48 	=> r46 
- 	 loadI 4 	=> r50 
- 	 add r46, r50 	=> r47 
- 	 loadAO r0, r47 	=> r49 
-	// Load RHS value of variable "i" at offset 0
- 	 loadAI r0, 0 	=> r51 
- 	 loadI 1 	=> r52 
- 	 sub r51, r52 	=> r53 
-	// Load RHS value of array variable "b" with base address 4
- 	 loadI 4 	=> r56 
- 	 mult r53, r56 	=> r54 
- 	 loadI 4 	=> r58 
- 	 add r54, r58 	=> r55 
- 	 loadAO r0, r55 	=> r57 
- 	 add r49, r57 	=> r59 
- 	 storeAO r59 	=> r0, r38 
-	// Load RHS value of variable "i" at offset 0
- 	 loadAI r0, 0 	=> r60 
-	// Compute address of array variable "c" with base address 44
- 	 loadI 4 	=> r63 
- 	 mult r60, r63 	=> r61 
- 	 loadI 44 	=> r66 
- 	 add r61, r66 	=> r62 
-	// Load RHS value of variable "i" at offset 0
- 	 loadAI r0, 0 	=> r67 
- 	 loadI 1 	=> r68 
- 	 sub r67, r68 	=> r69 
-	// Load RHS value of array variable "c" with base address 44
- 	 loadI 4 	=> r72 
- 	 mult r69, r72 	=> r70 
- 	 loadI 44 	=> r74 
- 	 add r70, r74 	=> r71 
- 	 loadAO r0, r71 	=> r73 
- 	 loadI 1 	=> r75 
- 	 add r73, r75 	=> r76 
- 	 storeAO r76 	=> r0, r62 
-	// Load RHS value of variable "i" at offset 0
- 	 loadAI r0, 0 	=> r77 
-	// Load RHS value of array variable "b" with base address 4
- 	 loadI 4 	=> r80 
- 	 mult r77, r80 	=> r78 
- 	 loadI 4 	=> r82 
- 	 add r78, r82 	=> r79 
- 	 loadAO r0, r79 	=> r81 
-	// Code for "PRINT" from offset -4
- 	 storeAI r81 	=> r0, -4 
- 	 outputAI r0, -4
-	// Load RHS value of variable "i" at offset 0
- 	 loadAI r0, 0 	=> r83 
-	// Load RHS value of array variable "c" with base address 44
- 	 loadI 4 	=> r86 
- 	 mult r83, r86 	=> r84 
- 	 loadI 44 	=> r88 
- 	 add r84, r88 	=> r85 
- 	 loadAO r0, r85 	=> r87 
-	// Code for "PRINT" from offset -4
- 	 storeAI r87 	=> r0, -4 
- 	 outputAI r0, -4
- 	 loadAI r0, 0 	=> r89 
- 	 addI r89, 1 	=> r90 
- 	 storeAI r90 	=> r0, 0 
- 	 br L0
-L2:	 nop 

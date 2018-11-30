@@ -499,7 +499,7 @@ main(int argc, char* argv[]) {
 
   printf("\n     CS515 Fall 2018 Compiler\n\n");
 
-  outfile = fopen("iloc-mysol.out", "w");
+  outfile = fopen("iloc.out", "w");
   if (outfile == NULL) { 
     printf("ERROR: cannot open output file \"iloc.out\".\n");
     return -1;
